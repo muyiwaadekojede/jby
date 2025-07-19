@@ -9,7 +9,7 @@ export default function Login () {
     <div className="mini-h-screen w-screen flex items-center justify-center">
         <div className="flex w-full max-w-sm flex-col gap-6">
             <Link href="/" className="flex items-center gap-2 self-center">
-            <Image src={Logo} alt="Logo" className="size-2"/> 
+            <Image src={Logo} alt="Logo" className="size-min"/> 
             <h1 className="text-2xl font-bold">
                 Job<span className="text-primary">Land</span></h1>
             </Link>
