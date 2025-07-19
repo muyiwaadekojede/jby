@@ -3,10 +3,10 @@ import Logo from "@/public/logo.png";
 import Image from "next/image";
 import {Button, buttonVariants} from "../ui/button";
 import { ThemeToggle } from "./ThemeToggle";
-import { signOut } from "@/app/utils/auth";
+import { signOut, auth } from "@/app/utils/auth";
 
 
-export function Navbar () {
+export async function Navbar () {
 
     const session = await auth ();
 
@@ -30,7 +30,7 @@ export function Navbar () {
                  }}>
                     <Button>Logout</Button>
                  </form> :
-                    <Link href="{/login}" className={buttonVariants ({variant: "outline", size: "lg"})}>Login</Link>   
+                    <Link href="/login" className={buttonVariants ({variant: "outline", size: "lg"})}>Login</Link>   
                 }
             </div>
         </nav>
