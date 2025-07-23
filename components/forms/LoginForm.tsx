@@ -45,7 +45,16 @@ export async function LoginForm () {
                                 />
                             </form>
 
-                            <form>
+                            <form action={async () => {
+                                "use server";
+
+                                await signIn("google", {
+                                    redirectTo: "/",
+
+                                });
+
+                            }}
+                            >
                                 <GeneralSubmitButton 
                                 width="w-full" 
                                 variant="outline" 
