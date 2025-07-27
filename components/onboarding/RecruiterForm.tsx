@@ -105,7 +105,7 @@ export function RecruiterForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <FormField
                     control={form.control}
-                    name="Website"
+                    name="website"
                     render={({ field } ) => (
                         <FormItem>
                             <FormLabel>
@@ -149,6 +149,24 @@ export function RecruiterForm() {
                         </FormItem>
                     )}
                     />
+
+                    <FormField
+                    control={form.control}
+                    name="about"
+                    render={({ field } ) => (
+                        <FormItem>
+                            <FormLabel>
+                               About
+                            </FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="Give a description about the company you are recruiting for" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+
+
             </form>
         </Form>
     );
