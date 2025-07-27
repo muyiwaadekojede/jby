@@ -3,11 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { recruiterSchema } from "@/app/utils/zodSchemas";
 import {z} from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 import { Select } from "@radix-ui/react-select";
 import { SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { countryList } from "@/app/utils/contries";
 import { Textarea } from "../ui/textarea";
+import { UploadDropzone } from "../general/UploadThingReexported";
 
 export function RecruiterForm() {
 
@@ -152,14 +153,22 @@ export function RecruiterForm() {
 
                     <FormField
                     control={form.control}
-                    name="about"
+                    name="logo"
                     render={({ field } ) => (
                         <FormItem>
                             <FormLabel>
-                               About
+                               Company Logo
                             </FormLabel>
                             <FormControl>
-                                <Textarea placeholder="Give a description about the company you are recruiting for" {...field} />
+                                <UploadDropzone endpoint="imageUploader" 
+                                onClientUploadComplete={(res) => {
+                                    field.onChange(res[0].url);
+                                }}
+                                onUploadError={() => {
+                                    console.log("something went wrong");
+                                }}
+                                className="ut-button:bg-primary ut-button:text-white ut-button:hover:bg-primary/90 ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground border-primary"
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
