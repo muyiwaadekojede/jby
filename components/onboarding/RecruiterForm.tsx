@@ -9,6 +9,10 @@ import { SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, Sel
 import { countryList } from "@/app/utils/contries";
 import { Textarea } from "../ui/textarea";
 import { UploadDropzone } from "../general/UploadThingReexported";
+import { CreateRecruiterCompany } from "@/app/actions";
+import { useState } from "react";
+import { Button } from "../ui/button";
+import Image from 'next/image'
 
 export function RecruiterForm() {
 
@@ -25,10 +29,27 @@ export function RecruiterForm() {
         },
     });
 
+    const [pending, setPending] = useState(false);
+
+    async function onSubmit(data: z.infer<typeof recruiterSchema>) {
+        try {
+            setPending(true);
+            await CreateRecruiterCompany(data)
+
+
+        } catch (error) { 
+            if(error instanceof Error && error.message !== 'NEXT_REDIRECT') {
+                console.log("something went wrong")
+            }
+
+        } finally {
+            setPending(false);
+        }
+    }
 
     return (
         <Form {...form}>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                     control={form.control}
@@ -47,7 +68,7 @@ export function RecruiterForm() {
                     />
 
 
-                                        <FormField
+                    <FormField
                     control={form.control}
                     name="location"
                     render={({ field } ) => (
@@ -157,9 +178,20 @@ export function RecruiterForm() {
                     render={({ field } ) => (
                         <FormItem>
                             <FormLabel>
-                               Company Logo
+                               Recruiting Company Logo
                             </FormLabel>
                             <FormControl>
+                                <div>
+                                    {field.value ? (
+                                        <div className="relative w-fit">
+                                            <Image src={field.value} 
+                                            alt="Company Logo" 
+                                            width={100} 
+                                            height={100} 
+                                            className="rounded-lg"
+                                            />
+                                        </div>
+                                    ) : (
                                 <UploadDropzone endpoint="imageUploader" 
                                 onClientUploadComplete={(res) => {
                                     field.onChange(res[0].url);
@@ -169,13 +201,17 @@ export function RecruiterForm() {
                                 }}
                                 className="ut-button:bg-primary ut-button:text-white ut-button:hover:bg-primary/90 ut-label:text-muted-foreground ut-allowed-content:text-muted-foreground border-primary"
                                 />
+                                    )}
+                                </div>
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                     />
 
-
+                    <Button type="submit" className="w-full" disabled={pending}>
+                        {pending ? "Submiting..." : "Continue"}
+                    </Button>
             </form>
         </Form>
     );

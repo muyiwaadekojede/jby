@@ -24,8 +24,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  userType UserType
-
+  userType UserType?
+  
   onboardingCompleted Boolean @default(false)
 
   Recruiter Recruiter?
