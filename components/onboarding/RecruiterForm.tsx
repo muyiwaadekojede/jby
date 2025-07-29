@@ -13,6 +13,7 @@ import { CreateRecruiterCompany } from "@/app/actions";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import Image from 'next/image'
+import { XIcon } from "lucide-react";
 
 export function RecruiterForm() {
 
@@ -183,13 +184,20 @@ export function RecruiterForm() {
                             <FormControl>
                                 <div>
                                     {field.value ? (
-                                        <div className="relative w-fit">
+                                        <div className="relative inline-block">
                                             <Image src={field.value} 
                                             alt="Company Logo" 
                                             width={100} 
                                             height={100} 
                                             className="rounded-lg"
                                             />
+                                            <Button 
+                                            type="button"
+                                            variant="destructive"
+                                            size="icon"
+                                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0">
+                                                <XIcon className="size-4" />
+                                            </Button>
                                         </div>
                                     ) : (
                                 <UploadDropzone endpoint="imageUploader" 
