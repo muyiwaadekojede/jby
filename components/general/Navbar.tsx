@@ -9,7 +9,7 @@ import { UserDropdown } from "./UserDropDown";
 
 export async function Navbar () {
 
-    const session = await auth ();
+    const session = await auth().catch(() => null);
 
 
 

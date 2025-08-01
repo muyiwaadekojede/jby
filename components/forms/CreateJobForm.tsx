@@ -103,7 +103,7 @@ export function CreateJobForm() {
                          control={form.control}
                          name="location"
                          render={({field}) => (
-                            <FormItem>
+                            <FormItem className="pt-5">
                                 <FormLabel>
                                     Job Location
                                 </FormLabel>

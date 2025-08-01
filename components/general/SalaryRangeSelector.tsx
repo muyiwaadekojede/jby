@@ -1,6 +1,7 @@
 import { Control, useController } from "react-hook-form";
 import { Slider } from "../ui/slider";
 import { useState } from "react";
+import { formatCurrency } from "@/app/utils/formatCurrency";
 
 interface iAppProps {
     control: Control<any>;
@@ -13,23 +14,42 @@ interface iAppProps {
 export function SalaryRangeSelector({control, currency, maxSalary, minSalary, step,
 }: iAppProps) {
         const {field: fromField} = useController({
-        name: 'salaryForm'
+        name: 'salaryForm',
         control, 
     });
 
-    const {field: toFiled} = useController({
+    const {field: toField} = useController({
         name: "salaryTo",
         control,
     });
 
     const [range, setRange] = useState<[number, number]>([
         fromField.value || minSalary,
-        toFiled.value || maxSalary/2,
+        toField.value || maxSalary/2,
     ]);
+
+    function handleChangeRange(value: number[]) {
+
+            const newRange: [number, number] = [value[0], value[1]];
+            setRange(newRange);
+            fromField.onChange(newRange[0]);
+            toField.onChange(newRange[1]);
+    }
 
     return (
     <div className="w-full space-y-4">
-        <Slider min={minSalary} max={maxSalary} step={step} value={range} />
+        <Slider onValueChange={handleChangeRange} min={minSalary} max={maxSalary} step={step} value={range} />
+     <div className="flex justify-between">
+        <span>
+            {formatCurrency(range[0])}
+        </span>
+
+        <span>
+            {formatCurrency(range[1])}
+        </span>
+     </div>
     </div>
+
+    
     );
 }
