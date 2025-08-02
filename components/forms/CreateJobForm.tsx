@@ -10,6 +10,8 @@ import { Input } from "../ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { countryList } from "@/app/utils/contries";
 import { SalaryRangeSelector } from "../general/SalaryRangeSelector";
+import JobDescriptionEditor from "@/components/richTextEditor/JobDescriptionEditor";
+import { BenefitsSelector } from "../BenefitsSelector";
 
 export function CreateJobForm() {
 
@@ -157,7 +159,42 @@ export function CreateJobForm() {
                                 <SalaryRangeSelector control={form.control} minSalary={10000} maxSalary={1000000} currency="USD" step={2000} />
                             </FormControl>
                          </FormItem>
+
+                         <FormField control={form.control}
+                         
+                         name="jobDescription"
+                         render={({field}) => (
+                            <FormItem>
+                                <FormLabel> 
+                                    Job Decsription
+                                </FormLabel>
+                                <FormControl>
+                                    <JobDescriptionEditor field={field as any}/>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                         )}
+                         />
+
+
                         </div>
+
+                        <FormField 
+                        
+                        control={form.control}
+                        name="benefits"
+                        render={({field}) => (
+                            <FormItem>
+                                <FormLabel>
+                                    Benefits
+                                </FormLabel>
+                                <FormControl>
+                                    <BenefitsSelector field={field as any} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                        />
                     </CardContent>
                 </Card>
             </form>
