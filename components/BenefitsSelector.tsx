@@ -24,7 +24,7 @@ export function BenefitsSelector({field}: iAppProps) {
         <div>
             <div className="flex flex-wrap gap-3">
                 {benefits.map((benefit) => {
-                    const isSelected = (field.value || []).includes(benefits.id);
+                    const isSelected = (field.value || []).includes(benefit.id);
 
                     return (
                     <Badge className="cursor-pointer transition-all hover:scale-105 active:scale-95 text-sm px-4 py-1.5 rounded-full" key={benefit.id} 
@@ -36,9 +36,13 @@ export function BenefitsSelector({field}: iAppProps) {
                             {benefit.label}
                         </span>
                     </Badge>
-                    )
+                    );
                 })}
-
+                <div className="mt-4 text-sm text-muted-foreground ">
+                    Selected Benefits: <span className="text-primary">
+                        {(field.value || []).length}
+                    </span>
+                </div>
             </div>
         </div>
     )

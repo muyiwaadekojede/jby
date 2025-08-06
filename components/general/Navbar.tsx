@@ -25,7 +25,7 @@ export async function Navbar () {
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-5">
                 <ThemeToggle />
-                <Link className={buttonVariants({ size: "lg" })} href="/post-jobs">
+                <Link className={buttonVariants({ size: "lg" })} href="/post-job">
                 Post a Job
                 </Link>
                 {session?.user ? (
