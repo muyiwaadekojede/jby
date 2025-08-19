@@ -9,6 +9,7 @@ import arcjet, { detectBot, shield } from "./utils/arcjet";
 import { request } from "@arcjet/next";
 import { stripe } from "./utils/stripe";
 import { jobListingDurationPricing } from "./utils/jobListingDurationPricing";
+import { inngest } from "./utils/inngest/client";
 
 
 
@@ -163,12 +164,21 @@ const jobpost = await prisma.jobPost.create({
         Company: {
             connect: { id: company.id }
         },
-    }
-
+    },
     select: {
         id: true,
     }
 });
+
+// Send job creation event after jobpost is created
+await inngest.send({
+    name: "job/created",
+    data: {
+        jobId: jobpost.id,
+        expirationDays: validateData.listingDuration,
+    }
+});
+
 
 const pricingTier = jobListingDurationPricing.find(
     (tier) => tier.days === validateData.listingDuration
