@@ -67,20 +67,22 @@ export function CreateJobForm(
     async function onSubmit(values: z.infer<typeof jobSchema>) {
 
         console.log("onSubmit called with values:", values);
-         try{
-            setPending(true)
-            await createJob(values); 
-         } catch (error) {
-             if(error instanceof Error && error.message !== 'NEXT_REDIRECT') {
-                console.log("something went wrong")
-            }
+       try{
+           console.log("Form errors:", form.formState.errors);
+           console.log("Form values:", form.getValues());
+           setPending(true)
+           await createJob(values); 
+           } catch (error) {
+            console.log("Form is valid:", form.formState.isValid);
+            if (!form.formState.isValid) {
+            console.log("Form validation failed:", form.formState.errors);
+            return;
+        }
         
         } finally {
            setPending(false);
-    }
+         }
 
-    console.log("Form errors:", form.formState.errors);
-    console.log("Form values:", form.getValues());
 
 
 

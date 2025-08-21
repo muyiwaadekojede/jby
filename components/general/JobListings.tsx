@@ -43,7 +43,12 @@ export async function JobListings() {
                 ))}
             </div>
         ):(
-            <EmptyState />
+            <EmptyState 
+              title="No Job Posts"
+              description="Filter not set correctly" 
+              buttonText="Go to homepage"
+              href="/"
+            />
         )}
         </>
     )
