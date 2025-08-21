@@ -1,6 +1,16 @@
-import { Ban, Link, PlusCircle } from "lucide-react";
+import { Ban, PlusCircle } from "lucide-react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button"
 
-export function EmptyState() {
+interface iAppProps {
+    title: string;
+    description: string;
+    buttonText: string; 
+    href: string;
+}
+
+
+export function EmptyState({ title, description, buttonText, href }: iAppProps) {
     return (
         <div className="flex flex-col flex-1 h-full items-center justify-center rounded-md border border-dashed p-8">
             <div className="flex size-20 items-center justify-center rounded-full bg-primary-10">
@@ -11,11 +21,11 @@ export function EmptyState() {
                 No Job Posts
             </h2>
 
-            <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground max-w-sm text-balance">Fliter not set correctly</p>
+            <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground max-w-sm text-balance">Filter not set correctly</p>
 
-            <Link href="/" className={buttonVariant()}>
-            <PlusCircle /> Go to hompage{""}
+            <Link href="/" className={buttonVariants()}>
+            <PlusCircle /> Go to homepage{" "}
             </Link>
         </div>
-    )
+    );
 }
