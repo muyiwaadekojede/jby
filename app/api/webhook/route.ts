@@ -27,9 +27,9 @@ export async function POST(req:Request) {
 
     const session = event.data.object as Stripe.Checkout.Session;
 
-    if(event.type === 'checkout.session.completed') {
-        const customerId = session.customer;
-        jobId = session.metadata?.jobId;
+        if(event.type === 'checkout.session.completed') {
+            const customerId = session.customer;
+            const jobId = session.metadata?.jobId; // Add 'const' here
 
 
         if(!jobId) {
