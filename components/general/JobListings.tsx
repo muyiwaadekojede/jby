@@ -7,7 +7,6 @@ async function getData() {
         where: {
             status: "ACTIVE",
         },
-
         select: {
             jobTitle: true,
             id: true,
@@ -34,15 +33,19 @@ async function getData() {
 
 export async function JobListings() {
     const data = await getData();
+    
     return (
         <>
         {data.length > 0 ? (
             <div className="flex flex-col gap-6">
-                {data.map ((job) => (
-                    <JobCard key={job.id} />
+                {data.map((job) => (
+                    <JobCard 
+                        key={job.id} 
+                        job={job} // FIXED: Pass the job data to JobCard
+                    />
                 ))}
             </div>
-        ):(
+        ) : (
             <EmptyState 
               title="No Job Posts"
               description="Filter not set correctly" 
@@ -51,5 +54,5 @@ export async function JobListings() {
             />
         )}
         </>
-    )
+    );
 }
