@@ -18,13 +18,13 @@ export function EmptyState({ title, description, buttonText, href }: iAppProps) 
             </div>
 
             <h2 className="mt-6 text-xl font-semibold">
-                No Job Posts
+                {title}
             </h2>
 
-            <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground max-w-sm text-balance">Filter not set correctly</p>
+            <p className="mb-8 mt-2 text-center text-sm leading-tight text-muted-foreground max-w-sm text-balance">{description}</p>
 
-            <Link href="/" className={buttonVariants()}>
-            <PlusCircle /> Go to homepage{" "}
+            <Link href={href} className={buttonVariants()}>
+            <PlusCircle /> {buttonText}
             </Link>
         </div>
     );

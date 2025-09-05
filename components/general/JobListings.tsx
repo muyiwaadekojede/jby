@@ -40,16 +40,15 @@ export async function JobListings() {
             <div className="flex flex-col gap-6">
                 {data.map((job) => (
                     <JobCard 
-                        key={job.id} 
-                        job={job} // FIXED: Pass the job data to JobCard
+                        key={job.id} job={job}
                     />
                 ))}
             </div>
         ) : (
             <EmptyState 
-              title="No Job Posts"
-              description="Filter not set correctly" 
-              buttonText="Go to homepage"
+              title="No Job Posts Found"
+              description="Try searching for different job title or location" 
+              buttonText="Clear all filters"
               href="/"
             />
         )}
