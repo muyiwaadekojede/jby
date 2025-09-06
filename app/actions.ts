@@ -11,6 +11,7 @@ import { request } from "@arcjet/next";
 // import { stripe } from "./utils/stripe";
 // import { jobListingDurationPricing } from "./utils/jobListingDurationPricing";
 import { inngest } from "./utils/inngest/client";
+import { revalidatePath } from "next/cache";
 
 const aj = arcjet.withRule(
     shield({
@@ -225,10 +226,11 @@ export async function saveJobPost(jobId: string) {
         },
     });
     
+    revalidatePath(`/job/${jobId}`)
 }
 
 
-export async function unJobPost(savedJobPostId: string) {
+export async function unsaveJobPost(savedJobPostId: string) {
 
     const user = await requireUser();
 
@@ -240,11 +242,15 @@ export async function unJobPost(savedJobPostId: string) {
         throw new Error("Forbidden");
     }
 
-    await prisma.savedJobPost.delete({
+    const data = await prisma.savedJobPost.delete({
         where: {
             id: savedJobPostId,
             userId: user.id,
         },
+        select: {
+            jobPostId: true
+        }
     });
     
+     revalidatePath(`/job/${data.jobPostId}`)
 }

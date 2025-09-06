@@ -15,6 +15,7 @@ import { request } from "@arcjet/next";
 import { auth } from "@/app/utils/auth";
 import Link from "next/link";
 import { SaveJobButton } from "@/components/forms/SubmitButtons";
+import { saveJobPost, unsaveJobPost } from "@/app/actions";
 
 
 const aj = arcjet.withRule(
@@ -49,8 +50,11 @@ function getClient(session: boolean) {
 }
 
 
-async function getJob(jobId?: string) {
-    const jobData = await prisma.jobPost.findUnique({
+async function getJob(jobId?: string, userId?: string) {
+
+
+    const [jobData, savedJob] = await Promise.all([
+        await prisma.jobPost.findUnique({
         where: {
             status: "ACTIVE",
             id: jobId, 
@@ -72,13 +76,33 @@ async function getJob(jobId?: string) {
                 },
             },
         },
-    });
+    }),
+
+
+    userId ? 
+    prisma.savedJobPost.findUnique({
+            where: {
+                userId_jobPostId: {
+                    userId: userId,
+                    jobPostId: jobId as string
+                }
+            },
+            select: {
+                id: true
+            }
+    })
+    : null,
+    ])
+
+
 
     if(!jobData) {
         return notFound();
     }
 
-    return jobData;
+    return {
+        jobData, savedJob
+    }
 }
 
 type Params = Promise<{ jobId: string }>;
@@ -95,7 +119,7 @@ export default async function JobIdPage({params}: {params: Params}) {
         throw new Error("forbidden");
     }
 
-    const data = await getJob(jobId);
+    const { jobData: data, savedJob} = await getJob(jobId, session?.user?.id);
 
     const locationFlag = getFlagEmoji(data.location);
     return (
@@ -136,9 +160,13 @@ export default async function JobIdPage({params}: {params: Params}) {
                     </Button> */}
 
                     {session && session.user ? (
-                        <form>
+                        <form action={
+                            savedJob 
+                            ? unsaveJobPost.bind(null, savedJob.id) 
+                            : saveJobPost.bind(null, jobId)
+                        }>
 
-                            <SaveJobButton />
+                            <SaveJobButton savedJob={!!savedJob} />
                         </form>
                     ) : (
                     <Link href="/login" className= {buttonVariants ({ variant: "outline" })} >
