@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -111,12 +109,12 @@ model VerificationToken {
 model JobPost {
   id String @id @default(uuid())
 
-  jobTitle String 
+  jobTitle String @db.VarChar(255)
   employmentType String
   location String
-  salaryForm Int    // Keep as salaryForm to match your generated client
+  salaryFrom Int    // Fixed field name from salaryForm to salaryFrom
   salaryTo Int
-  jobDescription String
+  jobDescription String @db.Text
   listingDuration Int
   benefits String[]
 
@@ -125,13 +123,13 @@ model JobPost {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
   
-  // Match your generated client - relation named "Company"
-  Company Recruiter @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  recruiter Recruiter @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
   recruiterId String
- 
- SavedJobPost SavedJobPost[]
-}
 
+  savedJobPosts SavedJobPost[]
+
+  @@index([recruiterId])
+}
 
 enum JobPostStatus {
   DRAFT
@@ -142,14 +140,16 @@ enum JobPostStatus {
 model SavedJobPost {
   id String @id @default(uuid())
 
-  JobPost JobPost @relation(fields: [jobPostId], references: [id]) 
+  jobPost JobPost @relation(fields: [jobPostId], references: [id], onDelete: Cascade) 
   jobPostId String
 
-  User User @relation(fields: [userId], references: [id]) 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) 
   userId String 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, jobPostId])
+  @@index([jobPostId])
+  @@index([userId])
 }

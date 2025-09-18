@@ -1,45 +1,110 @@
+"use client";
+
 import Link from "next/link";
-import Logo from "@/public/logo.png";
+import { Button, buttonVariants } from "../ui/button";
 import Image from "next/image";
-import {Button, buttonVariants} from "../ui/button";
+import Logo from "@/public/logo.png";
+import { Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { useSession } from "next-auth/react";
 import { ThemeToggle } from "./ThemeToggle";
-import { signOut, auth } from "@/app/utils/auth";
 import { UserDropdown } from "./UserDropDown";
 
+export function Navbar() {
+  const { data: session } = useSession();
 
-export async function Navbar () {
+  return (
+    <nav className="flex justify-between items-center py-5">
+      <Link href="/" className="flex items-center gap-2">
+        <Image src={Logo} alt="Job Land Logo" width={40} height={40} />
+        <h1 className="text-2xl font-bold">
+          Job<span className="text-primary">Land</span>
+        </h1>
+      </Link>
 
-    const session = await auth().catch(() => null);
+      {/* Desktop Navigation */}
+      <div className="hidden md:flex items-center gap-5">
+        <ThemeToggle />
+        <Link href="/post-job" className={buttonVariants({ size: "lg" })}>
+          Post Job
+        </Link>
+        {session?.user ? (
+          <UserDropdown
+            email={session.user.email as string}
+            name={session.user.name as string}
+            image={session.user.image as string}
+          />
+        ) : (
+          <Link
+            href="/login"
+            className={buttonVariants({ variant: "outline", size: "lg" })}
+          >
+            Login
+          </Link>
+        )}
+      </div>
 
+      {/* Mobile Navigation */}
+      <div className="md:hidden flex items-center gap-4">
+        <ThemeToggle />
+        {session?.user ? (
+          <UserDropdown
+            email={session.user.email as string}
+            name={session.user.name as string}
+            image={session.user.image as string}
+          />
+        ) : (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Open menu"
+              >
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader className="text-left">
+                <SheetTitle>
+                  Job<span className="text-primary">Land</span>
+                </SheetTitle>
+                <SheetDescription>
+                  Find or post your next job opportunity
+                </SheetDescription>
+              </SheetHeader>
 
-
-    return (
-        <nav className="flex items-center justify-between py-8 px-4 max-w-7xl mx-auto">
-            <Link href="/" className="flex items-center gap-2"> 
-            <Image src={Logo} alt="Logo for Jobbay" width={40} height={40}/>
-             <h1 className="text-2xl font-bold">
-                Job<span className="text-primary">Land</span>
-             </h1>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-5">
-                <ThemeToggle />
-                <Link className={buttonVariants({ size: "lg" })} href="/post-job">
-                Post a Job
+              <div className="flex flex-col gap-4 mt-6">
+                <Link
+                  href="/"
+                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                >
+                  Find New Job
                 </Link>
-                {session?.user ? (
-                    <UserDropdown 
-                    email={session.user.email as string} 
-                    image={session.user.image  as string} 
-                    name={session.user.name  as string}  
-                    />
-                ) : (
-                    <Link href="/login" className={buttonVariants({variant: "outline"})}>
-                    Login
-                    </Link>
-                )}
-            </div>
-        </nav>
-    );
-};
+                <Link
+                  href="/post-job"
+                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                >
+                  Post a Job
+                </Link>
+                <Link
+                  href="/login"
+                  className="text-lg px-4 py-2 rounded-md bg-secondary hover:bg-secondary/80 transition-colors duration-200"
+                >
+                  Login
+                </Link>
+              </div>
+            </SheetContent>
+          </Sheet>
+        )}
+      </div>
+    </nav>
+  );
+}

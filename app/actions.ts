@@ -31,6 +31,10 @@ export async function CreateRecruiterCompany (data: z.infer<typeof recruiterSche
 
     const decision = await aj.protect(req);
 
+    if(decision.isDenied()) {
+        throw new Error("Forbidden")
+    }
+
     if (decision.isDenied()) {
     throw new Error("Forbidden")
     }
@@ -144,7 +148,7 @@ export async function createJob(data: z.infer<typeof jobSchema>) {
             jobTitle: validateData.jobTitle,
             employmentType: validateData.employmentType,
             location: validateData.location,
-            salaryForm: validateData.salaryFrom,
+            salaryForm: validateData.salaryForm,
             salaryTo: validateData.salaryTo,
             listingDuration: validateData.listingDuration,
             benefits: validateData.benefits,
@@ -253,4 +257,71 @@ export async function unsaveJobPost(savedJobPostId: string) {
     });
     
      revalidatePath(`/job/${data.jobPostId}`)
+}
+
+
+
+export async function editJobPost(data: z.infer<typeof jobSchema>, jobId: string) {
+    const user = await requireUser()
+
+    const req = await request();
+
+    const decision = await aj.protect(req);
+
+    const validateData = jobSchema.parse(data)
+
+    await prisma.jobPost.update({
+        where: {
+            id: jobId,
+            Company: {
+                userId: user.id,
+            },
+        },
+        data: {
+            jobDescription: validateData.jobDescription,
+            jobTitle: validateData.jobTitle,
+            employmentType: validateData.employmentType,
+            location: validateData.location,
+            salaryForm: validateData.salaryForm,
+            salaryTo: validateData.salaryTo,
+            listingDuration: validateData.listingDuration,
+            benefits: validateData.benefits,
+
+            },
+    });
+
+
+    return redirect("/my-jobs");
+}
+
+
+export async function deleteJobPost(jobId: string) {
+    const session = await requireUser();
+
+    const req = await request();
+
+    const decision = await aj.protect(req);
+
+    if (decision.isDenied()) {
+        throw new Error("Forbidden");
+    }
+
+    await prisma.jobPost.delete({
+        where: {
+            id: jobId,
+            Company: {
+                userId: session.id,
+            },
+        },      
+    });
+
+
+
+    await inngest.send({
+        name: 'job/cancel.expiration',
+        data: {jobId: jobId},
+    });
+
+
+    return redirect("/my-jobs");
 }

@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/richTextEditor"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/richTextEditor", "app/(mainLayout)/my-jobs/delete/page.tsx"],
   "exclude": ["node_modules"]
 }

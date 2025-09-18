@@ -61,7 +61,7 @@ export const jobSchema = z.object({
     jobTitle: z.string().min(2, "Job Title must be at least 2 characters long"),
     employmentType: z.string().min(1, "Please select an employment type"),
     location: z.string().min(1, "Please select location"),
-    salaryFrom: z.number().min(1, "Salary from is required"),
+    salaryForm: z.number().min(1, "Salary from is required"),
     salaryTo: z.number().min(1, "Salary to is required"),
     jobDescription: z.string().min(1, "Job description is required"),
     listingDuration: z.number().min(1, "Listing duration is required"),
@@ -72,7 +72,7 @@ export const jobSchema = z.object({
     companyLogo: z.string().min(1, "Logo is required"),
     companyWebsite: z.string().min(1, "Company website is required"),
     companyXaccount: z.string().optional(),
-}).refine((data) => data.salaryTo >= data.salaryFrom, {
+}).refine((data) => data.salaryTo >= data.salaryForm, {
     message: "Maximum salary must be greater than or equal to minimum salary",
     path: ["salaryTo"],
 });

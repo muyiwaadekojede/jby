@@ -1,3 +1,5 @@
+"use client";
+
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { Avatar, AvatarImage, } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -5,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { ChevronDown, Heart, Layers2, LogOut, LogOutIcon } from "lucide-react";
 import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
-import { signOut } from "@/app/utils/auth";
+import { signOut } from "next-auth/react";
 
 interface iAppProps {
     email: string;
@@ -52,18 +54,15 @@ export function UserDropdown({ email, name, image }: iAppProps) {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                    <form action={async () => {
-                        "use server"
-
-                        await signOut ({ redirectTo: "/"})
-                    }}>
-                        <button className="flex w-full items-center gap-2">
-                            <LogOut size={16} strokeWidth={2} className="opacity-60" />
-                            <span>
-                                Logout
-                            </span>
-                        </button>
-                    </form>
+                    <button 
+                        onClick={() => signOut({ redirectTo: "/" })}
+                        className="flex w-full items-center gap-2 text-left px-2 py-1.5 text-sm"
+                    >
+                        <LogOut size={16} strokeWidth={2} className="opacity-60" />
+                        <span>
+                            Logout
+                        </span>
+                    </button>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
